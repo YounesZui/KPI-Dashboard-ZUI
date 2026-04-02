@@ -12,12 +12,42 @@ const KPI_DATA = [
       traffic:          11567,
       conversion_rate:  1.24,
       social_cr:        0,
-      aov:              270.41,
       revenue:          47778.68,
-      rps:              null,    // wird automatisch berechnet (revenue ÷ traffic)
+      rps:              null,
+      aov:              270.41,
       cart_abandon:     46.0,
       checkout_abandon: 43.0,
       returning:        23.7
+    }
+  },
+  {
+    period: "2026-02-01",
+    label: "Feb 26 · Gesamt",
+    kpis: {
+      traffic:          11960,
+      conversion_rate:  0.59,
+      social_cr:        null,
+      revenue:          23620.19,
+      rps:              null,
+      aov:              197.00,
+      cart_abandon:     44.7,
+      checkout_abandon: 54.5,
+      returning:        36.4
+    }
+  },
+  {
+    period: "2026-01-01",
+    label: "Jan 26 · Gesamt",
+    kpis: {
+      traffic:          12427,
+      conversion_rate:  0.81,
+      social_cr:        null,
+      revenue:          24953.45,
+      rps:              null,
+      aov:              162.00,
+      cart_abandon:     30.6,
+      checkout_abandon: 54.1,
+      returning:        34.97
     }
   }
 ];
