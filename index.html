@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marketing KPI Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="header-left">
+      <div class="agency-label">Marketing Performance</div>
+      <h1>KPI <span>Dashboard</span></h1>
+    </div>
+    <div class="header-right">
+      <div id="last-updated" class="last-updated">–</div>
+    </div>
+  </header>
+
+  <!-- ── Period Tabs ── -->
+  <div class="period-tabs" id="period-tabs"></div>
+
+  <!-- ── Main Content ── -->
+  <div id="main-content">
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <!-- Charts -->
+    <div class="section-title">
+      <span class="section-icon">📈</span> KPI-Verlauf
+    </div>
+    <div class="charts-grid" id="charts-grid"></div>
+
+    <!-- History Table -->
+    <div class="section-title">
+      <span class="section-icon">📋</span> Alle Perioden
+      <button class="btn btn-danger" style="margin-left:auto;font-size:0.75rem;padding:0.3rem 0.8rem;"
+              onclick="deleteCurrentPeriod()">
+        🗑 Aktive Periode löschen
+      </button>
+    </div>
+    <div class="history-card">
+      <div class="history-scroll">
+        <table>
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <!-- ── Data Entry Panel ── -->
+  <div class="entry-panel">
+    <div class="entry-header" onclick="toggleEntry()">
+      <h2>
+        ✚ Neue Periode eintragen
+        &nbsp;<span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;">
+          · Alle 2 Wochen (1. &amp; 15. des Monats)
+        </span>
+      </h2>
+      <span class="entry-toggle" id="entry-toggle">▼</span>
+    </div>
+    <div class="entry-body" id="entry-body">
+      <div class="entry-grid" id="entry-form-grid">
+        <!-- built by JS -->
+      </div>
+
+      <div class="entry-actions">
+        <button class="btn btn-primary" onclick="submitEntry()">
+          ✓ Eintrag speichern
+        </button>
+        <button class="btn btn-ghost" onclick="clearForm()">
+          ↺ Felder leeren
+        </button>
+        <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.toggle('open')">
+          &lt;/&gt; Code-Snippet zeigen
+        </button>
+      </div>
+
+      <!-- Export box -->
+      <div class="export-box" id="export-box">
+        <div class="export-label">➜ Diesen Block in data.js einfügen (für dauerhaften Commit auf GitHub)</div>
+        <pre id="export-pre"></pre>
+        <div class="entry-actions" style="margin-top:0.6rem;">
+          <button class="btn btn-ghost" onclick="copyExport()">📋 Kopieren</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.remove('open')">✕ Schließen</button>
+        </div>
+      </div>
+
+      <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <div style="font-size:0.72rem;color:var(--text-faint);line-height:1.7;">
+          <strong style="color:var(--text-muted);">💾 Speicherverhalten:</strong>
+          Einträge werden automatisch im Browser gespeichert (localStorage) – kein Code-Editieren nötig.<br/>
+          Für <strong style="color:var(--text-muted);">dauerhaften GitHub-Commit</strong>: Nutze den Code-Snippet-Export und füge den Block in <code style="color:var(--teal);">data.js</code> ein.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Scripts: data first, then logic -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
