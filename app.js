@@ -139,7 +139,7 @@ function buildSparkline(data, trendClass) {
     return `${x},${y}`;
   });
 
-  const color = trendClass === 'up' ? '#2eb8a0' : trendClass === 'down' ? '#e05252' : '#7d8fa3';
+  const color = trendClass === 'up' ? '#1a7a4a' : trendClass === 'down' ? '#c0392b' : '#aaaaaa';
   const polyline = pts.join(' ');
   const area = `${pts[0].split(',')[0]},40 ${polyline} ${pts[pts.length-1].split(',')[0]},40`;
 
@@ -187,8 +187,8 @@ function buildBarChart(data, meta, _latest) {
   const max   = Math.max(...vals) * 1.15 || 1;
   const min   = 0;
   const barW  = Math.max(8, (innerW / data.length) - 6);
-  const color = meta.trend === 'lower_better' ? '#e05252' : '#c9a94e';
-  const colorHi = '#2eb8a0';
+  const color = '#cccccc';
+  const colorHi = '#e8540a';
 
   const bars = data.map((d, i) => {
     const bH = ((d.val - min) / (max - min)) * innerH;
@@ -206,8 +206,8 @@ function buildBarChart(data, meta, _latest) {
     const yPos = padT + innerH - t * innerH;
     const val  = min + t * (max - min);
     return `
-      <line x1="${padL}" y1="${yPos}" x2="${W - padR}" y2="${yPos}" stroke="#21293a" stroke-width="1"/>
-      <text x="${padL - 5}" y="${yPos + 4}" fill="#3d4f63" font-size="9" text-anchor="end">${formatShort(val, meta)}</text>
+      <line x1="${padL}" y1="${yPos}" x2="${W - padR}" y2="${yPos}" stroke="#e8e8e8" stroke-width="1"/>
+      <text x="${padL - 5}" y="${yPos + 4}" fill="#aaaaaa" font-size="9" text-anchor="end">${formatShort(val, meta)}</text>
     `;
   }).join('');
 
@@ -216,7 +216,7 @@ function buildBarChart(data, meta, _latest) {
     if (data.length > 5 && i % 2 !== 0) return '';
     const x = padL + i * (innerW / data.length) + (innerW / data.length) / 2;
     const label = d.label.split('·')[1]?.trim() || d.label;
-    return `<text x="${x}" y="${H - 4}" fill="#3d4f63" font-size="8" text-anchor="middle">${label}</text>`;
+    return `<text x="${x}" y="${H - 4}" fill="#aaaaaa" font-size="8" text-anchor="middle">${label}</text>`;
   }).join('');
 
   return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
