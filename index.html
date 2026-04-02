@@ -3,31 +3,34 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Marketing KPI Dashboard</title>
+  <title>Marketing KPI Dashboard · Zuitable</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
+<!-- Top Bar -->
+<div class="top-bar">Marketing Performance · KPI Dashboard</div>
+
+<!-- Page Header (outside wrapper for full-bleed border) -->
+<header class="page-header">
+  <div class="header-left">
+    <div class="agency-label">Marketing Agentur</div>
+    <h1>KPI <span>Dashboard</span></h1>
+  </div>
+  <div class="header-right">
+    <div id="last-updated" class="last-updated">–</div>
+  </div>
+</header>
+
 <div class="wrapper">
 
-  <!-- ── Header ── -->
-  <header>
-    <div class="header-left">
-      <div class="agency-label">Marketing Performance</div>
-      <h1>KPI <span>Dashboard</span></h1>
-    </div>
-    <div class="header-right">
-      <div id="last-updated" class="last-updated">–</div>
-    </div>
-  </header>
-
-  <!-- ── Period Tabs ── -->
+  <!-- Period Tabs -->
   <div class="period-tabs" id="period-tabs"></div>
 
-  <!-- ── Main Content ── -->
+  <!-- Main Content -->
   <div id="main-content">
 
     <!-- KPI Cards -->
@@ -35,16 +38,16 @@
 
     <!-- Charts -->
     <div class="section-title">
-      <span class="section-icon">📈</span> KPI-Verlauf
+      <span class="section-icon">▲</span> KPI-Verlauf
     </div>
     <div class="charts-grid" id="charts-grid"></div>
 
     <!-- History Table -->
     <div class="section-title">
-      <span class="section-icon">📋</span> Alle Perioden
-      <button class="btn btn-danger" style="margin-left:auto;font-size:0.75rem;padding:0.3rem 0.8rem;"
+      <span class="section-icon">▲</span> Alle Perioden
+      <button class="btn btn-danger" style="margin-left:auto;"
               onclick="deleteCurrentPeriod()">
-        🗑 Aktive Periode löschen
+        Periode löschen
       </button>
     </div>
     <div class="history-card">
@@ -58,14 +61,12 @@
 
   </div><!-- /main-content -->
 
-  <!-- ── Data Entry Panel ── -->
+  <!-- Data Entry Panel -->
   <div class="entry-panel">
     <div class="entry-header" onclick="toggleEntry()">
       <h2>
-        ✚ Neue Periode eintragen
-        &nbsp;<span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;">
-          · Alle 2 Wochen (1. &amp; 15. des Monats)
-        </span>
+        + Neue Periode eintragen
+        <span class="sub">· 1. &amp; 15. des Monats</span>
       </h2>
       <span class="entry-toggle" id="entry-toggle">▼</span>
     </div>
@@ -75,33 +76,26 @@
       </div>
 
       <div class="entry-actions">
-        <button class="btn btn-primary" onclick="submitEntry()">
-          ✓ Eintrag speichern
-        </button>
-        <button class="btn btn-ghost" onclick="clearForm()">
-          ↺ Felder leeren
-        </button>
-        <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.toggle('open')">
-          &lt;/&gt; Code-Snippet zeigen
-        </button>
+        <button class="btn btn-primary" onclick="submitEntry()">Eintrag speichern</button>
+        <button class="btn btn-ghost"   onclick="clearForm()">Felder leeren</button>
+        <button class="btn btn-ghost"   onclick="document.getElementById('export-box').classList.toggle('open')">Code-Snippet</button>
       </div>
 
-      <!-- Export box -->
       <div class="export-box" id="export-box">
-        <div class="export-label">➜ Diesen Block in data.js einfügen (für dauerhaften Commit auf GitHub)</div>
+        <div class="export-label">→ Diesen Block in data.js einfügen (für GitHub-Commit)</div>
         <pre id="export-pre"></pre>
         <div class="entry-actions" style="margin-top:0.6rem;">
-          <button class="btn btn-ghost" onclick="copyExport()">📋 Kopieren</button>
-          <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.remove('open')">✕ Schließen</button>
+          <button class="btn btn-ghost" onclick="copyExport()">Kopieren</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.remove('open')">Schließen</button>
         </div>
       </div>
 
       <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <div style="font-size:0.72rem;color:var(--text-faint);line-height:1.7;">
-          <strong style="color:var(--text-muted);">💾 Speicherverhalten:</strong>
-          Einträge werden automatisch im Browser gespeichert (localStorage) – kein Code-Editieren nötig.<br/>
-          Für <strong style="color:var(--text-muted);">dauerhaften GitHub-Commit</strong>: Nutze den Code-Snippet-Export und füge den Block in <code style="color:var(--teal);">data.js</code> ein.
-        </div>
+        <p style="font-size:0.65rem;color:var(--text-faint);line-height:1.8;font-family:var(--font-display);letter-spacing:0.04em;">
+          <strong style="color:var(--text-muted);">SPEICHER-INFO —</strong>
+          Einträge werden automatisch im Browser gespeichert (localStorage) – kein Code-Editieren nötig.
+          Für dauerhaften GitHub-Commit: Code-Snippet exportieren und in <code style="color:var(--orange);font-size:0.7rem;">data.js</code> einfügen.
+        </p>
       </div>
     </div>
   </div>
@@ -111,7 +105,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Scripts: data first, then logic -->
+<!-- Scripts -->
 <script src="data.js"></script>
 <script src="app.js"></script>
 
