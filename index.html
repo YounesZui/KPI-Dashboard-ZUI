@@ -14,7 +14,7 @@
 <!-- Top Bar -->
 <div class="top-bar">Marketing Performance · KPI Dashboard</div>
 
-<!-- Page Header (outside wrapper for full-bleed border) -->
+<!-- Page Header -->
 <header class="page-header">
   <div class="header-left">
     <div class="agency-label">Marketing Agentur</div>
@@ -45,10 +45,6 @@
     <!-- History Table -->
     <div class="section-title">
       <span class="section-icon">▲</span> Alle Perioden
-      <button class="btn btn-danger" style="margin-left:auto;"
-              onclick="deleteCurrentPeriod()">
-        Periode löschen
-      </button>
     </div>
     <div class="history-card">
       <div class="history-scroll">
@@ -59,48 +55,9 @@
       </div>
     </div>
 
-  </div><!-- /main-content -->
-
-  <!-- Data Entry Panel -->
-  <div class="entry-panel">
-    <div class="entry-header" onclick="toggleEntry()">
-      <h2>
-        + Neue Periode eintragen
-        <span class="sub">· 1. &amp; 15. des Monats</span>
-      </h2>
-      <span class="entry-toggle" id="entry-toggle">▼</span>
-    </div>
-    <div class="entry-body" id="entry-body">
-      <div class="entry-grid" id="entry-form-grid">
-        <!-- built by JS -->
-      </div>
-
-      <div class="entry-actions">
-        <button class="btn btn-primary" onclick="submitEntry()">Eintrag speichern</button>
-        <button class="btn btn-ghost"   onclick="clearForm()">Felder leeren</button>
-        <button class="btn btn-ghost"   onclick="document.getElementById('export-box').classList.toggle('open')">Code-Snippet</button>
-      </div>
-
-      <div class="export-box" id="export-box">
-        <div class="export-label">→ Diesen Block in data.js einfügen (für GitHub-Commit)</div>
-        <pre id="export-pre"></pre>
-        <div class="entry-actions" style="margin-top:0.6rem;">
-          <button class="btn btn-ghost" onclick="copyExport()">Kopieren</button>
-          <button class="btn btn-ghost" onclick="document.getElementById('export-box').classList.remove('open')">Schließen</button>
-        </div>
-      </div>
-
-      <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <p style="font-size:0.65rem;color:var(--text-faint);line-height:1.8;font-family:var(--font-display);letter-spacing:0.04em;">
-          <strong style="color:var(--text-muted);">SPEICHER-INFO —</strong>
-          Einträge werden automatisch im Browser gespeichert (localStorage) – kein Code-Editieren nötig.
-          Für dauerhaften GitHub-Commit: Code-Snippet exportieren und in <code style="color:var(--orange);font-size:0.7rem;">data.js</code> einfügen.
-        </p>
-      </div>
-    </div>
   </div>
 
-</div><!-- /wrapper -->
+</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
