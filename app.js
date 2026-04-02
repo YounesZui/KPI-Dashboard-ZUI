@@ -78,8 +78,8 @@ function renderPeriodTabs() {
 
 /* ── KPI Cards ── */
 function renderKpiCards() {
-  const current = KPI_DATA[activeIndex];
-  const prev    = KPI_DATA[activeIndex + 1] || null;
+  const current = { ...KPI_DATA[activeIndex], kpis: enrichKpis(KPI_DATA[activeIndex].kpis) };
+  const prev    = KPI_DATA[activeIndex + 1] ? { ...KPI_DATA[activeIndex + 1], kpis: enrichKpis(KPI_DATA[activeIndex + 1].kpis) } : null;
   const container = document.getElementById('kpi-grid');
   container.innerHTML = '';
 
@@ -289,7 +289,7 @@ function buildEntryForm() {
         <div class="entry-field">
           <label>${meta.icon} ${meta.label}</label>
           <input type="number" id="ef-${key}" step="0.01" min="0"
-                 placeholder="${meta.unit === '%' ? 'z. B. 3.5' : meta.unit === '€' ? 'z. B. 89.00' : 'z. B. 15000'}"/>
+                 placeholder="${meta.unit === '%' ? 'z. B. 3.5' : meta.unit === '€' ? 'z. B. 89.00' : meta.unit === 'x' ? 'z. B. 4.2' : 'z. B. 15000'}"/>
           <span class="hint">${meta.description}${meta.unit ? ' (in ' + meta.unit + ')' : ''}</span>
         </div>
       `;
@@ -404,6 +404,16 @@ function updateTimestamp() {
   });
 }
 
+/* ── Auto-calculate derived KPIs ── */
+function enrichKpis(kpis) {
+  const k = Object.assign({}, kpis);
+  // RPS: Revenue per Session – auto if revenue + traffic available
+  if (k.rps === null && k.revenue !== null && k.traffic) {
+    k.rps = k.revenue / k.traffic;
+  }
+  return k;
+}
+
 /* ── Formatters ── */
 function formatValue(val, meta) {
   if (val === undefined || val === null) return '–';
@@ -411,14 +421,16 @@ function formatValue(val, meta) {
     case 'currency': return `<span class="unit-prefix">€</span>${val.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
     case 'percent':  return `${val.toLocaleString('de-DE', {minimumFractionDigits:1, maximumFractionDigits:1})}<span class="unit">%</span>`;
     case 'number':   return val.toLocaleString('de-DE');
+    case 'roas':     return `${val.toLocaleString('de-DE', {minimumFractionDigits:1, maximumFractionDigits:1})}<span class="unit">x</span>`;
     default:         return String(val);
   }
 }
 
 function formatShort(val, meta) {
   if (meta.format === 'currency') return '€' + (val >= 1000 ? (val/1000).toFixed(1)+'k' : val.toFixed(0));
-  if (meta.format === 'percent') return val.toFixed(1) + '%';
+  if (meta.format === 'percent')  return val.toFixed(1) + '%';
+  if (meta.format === 'roas')     return val.toFixed(1) + 'x';
   if (val >= 1000000) return (val/1000000).toFixed(1) + 'M';
-  if (val >= 1000) return (val/1000).toFixed(1) + 'k';
+  if (val >= 1000)    return (val/1000).toFixed(1) + 'k';
   return val.toFixed(0);
 }
