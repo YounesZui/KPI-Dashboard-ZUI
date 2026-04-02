@@ -2,7 +2,6 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8"/>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Marketing KPI Dashboard · Zuitable</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -12,10 +11,8 @@
 </head>
 <body>
 
-<!-- Top Bar -->
 <div class="top-bar">Marketing Performance · KPI Dashboard</div>
 
-<!-- Page Header -->
 <header class="page-header">
   <div class="header-left">
     <div class="agency-label">Marketing Agentur</div>
@@ -28,24 +25,30 @@
 
 <div class="wrapper">
 
+  <!-- Year Tabs + Compare Button -->
+  <div class="toolbar">
+    <div class="year-tabs" id="year-tabs"></div>
+    <button class="compare-btn" id="compare-btn" onclick="toggleCompare()" style="display:none;">
+      ⇄ Vorjahresvergleich
+    </button>
+  </div>
+
   <!-- Period Tabs -->
   <div class="period-tabs" id="period-tabs"></div>
 
   <!-- Main Content -->
   <div id="main-content">
 
-    <!-- KPI Cards -->
     <div class="kpi-grid" id="kpi-grid"></div>
 
-    <!-- Charts -->
     <div class="section-title">
       <span class="section-icon">▲</span> KPI-Verlauf
     </div>
     <div class="charts-grid" id="charts-grid"></div>
 
-    <!-- History Table -->
     <div class="section-title">
       <span class="section-icon">▲</span> Alle Perioden
+      <div class="table-year-filter" id="table-year-filter"></div>
     </div>
     <div class="history-card">
       <div class="history-scroll">
@@ -57,15 +60,11 @@
     </div>
 
   </div>
-
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Scripts -->
 <script src="data.js"></script>
 <script src="app.js"></script>
-
 </body>
 </html>
