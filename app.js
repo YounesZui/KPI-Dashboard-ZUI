@@ -5,9 +5,7 @@ let activeIndex = KPI_DATA.length - 1;
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
-  loadFromLocalStorage();
   render();
-  buildEntryForm();
 });
 
 /* ── localStorage: merge saved data on top of bundled data ── */
@@ -229,168 +227,76 @@ function buildBarChart(data, meta, _latest) {
 function renderTable() {
   const thead = document.getElementById('table-head');
   const tbody = document.getElementById('table-body');
+  const keys  = Object.keys(KPI_META);
 
-  const keys = Object.keys(KPI_META);
+  // Which KPIs are summed vs. averaged in the totals row
+  const sumKeys     = ['traffic', 'revenue'];
+  const avgKeys     = ['conversion_rate', 'social_cr', 'aov', 'rps', 'cart_abandon', 'checkout_abandon', 'returning'];
 
   thead.innerHTML = `<tr>
     <th>Periode</th>
     ${keys.map(k => `<th>${KPI_META[k].label}</th>`).join('')}
   </tr>`;
 
-  tbody.innerHTML = KPI_DATA.map((entry, i) => {
-    const prev = KPI_DATA[i - 1] || null;
+  // Regular rows
+  const rows = KPI_DATA.map((entry, i) => {
+    const enriched = enrichKpis(entry.kpis);
+    const prev     = KPI_DATA[i - 1] ? enrichKpis(KPI_DATA[i - 1].kpis) : null;
+
     const cells = keys.map(key => {
-      const val     = entry.kpis[key];
-      const prevVal = prev?.kpis[key];
-      if (val === undefined) return `<td>–</td>`;
+      const val     = enriched[key];
+      const prevVal = prev ? prev[key] : null;
+      if (val === undefined || val === null) return `<td>–</td>`;
 
       let deltaHtml = '';
       if (prevVal !== undefined && prevVal !== null) {
-        const delta = val - prevVal;
-        const pct   = prevVal !== 0 ? (delta / Math.abs(prevVal) * 100) : 0;
+        const delta  = val - prevVal;
+        const pct    = prevVal !== 0 ? (delta / Math.abs(prevVal) * 100) : 0;
         const better = KPI_META[key].trend === 'higher_better' ? delta > 0 : delta < 0;
         const cls    = better ? 'pos' : 'neg';
         const sign   = delta > 0 ? '+' : '';
-        deltaHtml = `<span class="delta ${cls}">${sign}${pct.toFixed(1)}%</span>`;
+        deltaHtml    = `<span class="delta ${cls}">${sign}${pct.toFixed(1)}%</span>`;
       }
-
       return `<td>${formatValue(val, KPI_META[key])} ${deltaHtml}</td>`;
     }).join('');
 
     const activeClass = i === activeIndex ? ' class="active-row"' : '';
     return `<tr${activeClass}><td class="period-cell">${entry.label}</td>${cells}</tr>`;
   }).join('');
-}
 
-/* ── Entry Form ── */
-function buildEntryForm() {
-  const grid = document.getElementById('entry-form-grid');
-  const keys = Object.keys(KPI_META);
+  // Totals row
+  const totalCells = keys.map(key => {
+    const meta   = KPI_META[key];
+    const values = KPI_DATA
+      .map(d => enrichKpis(d.kpis)[key])
+      .filter(v => v !== null && v !== undefined);
 
-  // Period field
-  const today = new Date();
-  const defaultPeriod = today.getDate() <= 15
-    ? `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`
-    : `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-15`;
+    if (!values.length) return `<td class="total-cell">–</td>`;
 
-  grid.innerHTML = `
-    <div class="entry-field" style="grid-column: 1/-1">
-      <label>📅 Datum der Periode</label>
-      <input type="date" id="ef-period" value="${defaultPeriod}"/>
-      <span class="hint">Immer 01. oder 15. des Monats</span>
-    </div>
-    <div class="entry-field" style="grid-column: 1/-1">
-      <label>🏷 Anzeige-Label (optional)</label>
-      <input type="text" id="ef-label" placeholder="z. B. Mai 25 · M1"/>
-      <span class="hint">Leer lassen = automatisch generiert</span>
-    </div>
-    ${keys.map(key => {
-      const meta = KPI_META[key];
-      return `
-        <div class="entry-field">
-          <label>${meta.icon} ${meta.label}</label>
-          <input type="number" id="ef-${key}" step="0.01" min="0"
-                 placeholder="${meta.unit === '%' ? 'z. B. 3.5' : meta.unit === '€' ? 'z. B. 89.00' : meta.unit === 'x' ? 'z. B. 4.2' : 'z. B. 15000'}"/>
-          <span class="hint">${meta.description}${meta.unit ? ' (in ' + meta.unit + ')' : ''}</span>
-        </div>
-      `;
-    }).join('')}
-  `;
-}
-
-function submitEntry() {
-  const periodInput = document.getElementById('ef-period');
-  const labelInput  = document.getElementById('ef-label');
-  const period = periodInput.value;
-  if (!period) { showToast('❌ Bitte ein Datum angeben.'); return; }
-
-  const kpis = {};
-  Object.keys(KPI_META).forEach(key => {
-    const input = document.getElementById(`ef-${key}`);
-    if (input && input.value !== '') {
-      kpis[key] = parseFloat(input.value);
+    let total;
+    if (sumKeys.includes(key)) {
+      total = values.reduce((a, b) => a + b, 0);
+    } else if (avgKeys.includes(key)) {
+      total = values.reduce((a, b) => a + b, 0) / values.length;
+    } else {
+      return `<td class="total-cell">–</td>`;
     }
-  });
 
-  if (Object.keys(kpis).length === 0) {
-    showToast('❌ Bitte mindestens einen KPI-Wert eingeben.'); return;
-  }
+    return `<td class="total-cell">${formatValue(total, meta)}</td>`;
+  }).join('');
 
-  // Auto-generate label from date if not provided
-  const date  = new Date(period + 'T00:00:00');
-  const month = date.toLocaleString('de-DE', { month: 'kurz' });
-  const half  = date.getDate() <= 15 ? 'M1' : 'M2';
-  const year  = String(date.getFullYear()).slice(2);
-  const autoLabel = `${month.charAt(0).toUpperCase() + month.slice(1)} ${year} · ${half}`;
-  const label = labelInput.value.trim() || autoLabel;
+  const year = KPI_DATA.length
+    ? new Date(KPI_DATA[0].period).getFullYear()
+    : new Date().getFullYear();
 
-  const entry = { period, label, kpis };
-
-  const existingIdx = KPI_DATA.findIndex(d => d.period === period);
-  if (existingIdx >= 0) {
-    KPI_DATA[existingIdx] = entry;
-    showToast('✅ Eintrag aktualisiert!');
-  } else {
-    KPI_DATA.unshift(entry);
-    showToast('✅ Neuer Eintrag hinzugefügt!');
-  }
-
-  KPI_DATA.sort((a, b) => a.period.localeCompare(b.period));
-  activeIndex = KPI_DATA.length - 1;
-  saveToLocalStorage();
-  render();
-  clearForm();
-  showExport();
-}
-
-function clearForm() {
-  Object.keys(KPI_META).forEach(key => {
-    const el = document.getElementById(`ef-${key}`);
-    if (el) el.value = '';
-  });
-  const lbl = document.getElementById('ef-label');
-  if (lbl) lbl.value = '';
-}
-
-function showExport() {
-  const box = document.getElementById('export-box');
-  const pre = document.getElementById('export-pre');
-  box.classList.add('open');
-
-  const latestEntry = KPI_DATA[0];
-  const snippet = `  {\n    period: "${latestEntry.period}",\n    label: "${latestEntry.label}",\n    kpis: {\n${
-    Object.entries(latestEntry.kpis).map(([k,v]) => `      ${k}: ${v}`).join(',\n')
-  }\n    }\n  },`;
-  pre.textContent = snippet;
-}
-
-function copyExport() {
-  const pre = document.getElementById('export-pre');
-  navigator.clipboard.writeText(pre.textContent)
-    .then(() => showToast('📋 In Zwischenablage kopiert!'))
-    .catch(() => showToast('Manuell kopieren (Ctrl+A im Code-Block)'));
-}
-
-function deleteCurrentPeriod() {
-  if (KPI_DATA.length === 0) return;
-  const label = KPI_DATA[activeIndex].label;
-  if (!confirm(`Periode "${label}" wirklich löschen?`)) return;
-  KPI_DATA.splice(activeIndex, 1);
-  activeIndex = Math.max(0, activeIndex - 1);
-  saveToLocalStorage();
-  render();
-  showToast('🗑 Eintrag gelöscht.');
+  tbody.innerHTML = rows + `
+    <tr class="total-row">
+      <td class="total-label">${year} · Gesamt</td>
+      ${totalCells}
+    </tr>`;
 }
 
 /* ── UI helpers ── */
-function toggleEntry() {
-  const body    = document.getElementById('entry-body');
-  const toggle  = document.getElementById('entry-toggle');
-  const isOpen  = body.classList.toggle('open');
-  toggle.classList.toggle('open', isOpen);
-  toggle.textContent = isOpen ? '▲' : '▼';
-}
-
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -400,8 +306,8 @@ function showToast(msg) {
 
 function updateTimestamp() {
   const el = document.getElementById('last-updated');
-  if (el) el.textContent = 'Zuletzt geöffnet: ' + new Date().toLocaleDateString('de-DE', {
-    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  if (el) el.textContent = 'Stand: ' + new Date().toLocaleDateString('de-DE', {
+    day: '2-digit', month: '2-digit', year: 'numeric'
   });
 }
 
