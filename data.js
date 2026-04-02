@@ -6,18 +6,18 @@
 
 const KPI_DATA = [
   {
-    period: "2026-03-01",
-    label: "Mär 26 · Gesamt",
+    period: "2026-01-01",
+    label: "Jan 26 · Gesamt",
     kpis: {
-      traffic:          11567,
-      conversion_rate:  1.24,
-      social_cr:        0,
-      revenue:          47778.68,
+      traffic:          12427,
+      conversion_rate:  0.81,
+      social_cr:        null,
+      revenue:          24953.45,
       rps:              null,
-      aov:              270.41,
-      cart_abandon:     46.0,
-      checkout_abandon: 43.0,
-      returning:        23.7
+      aov:              162.00,
+      cart_abandon:     30.6,
+      checkout_abandon: 54.1,
+      returning:        34.97
     }
   },
   {
@@ -36,18 +36,18 @@ const KPI_DATA = [
     }
   },
   {
-    period: "2026-01-01",
-    label: "Jan 26 · Gesamt",
+    period: "2026-03-01",
+    label: "Mär 26 · Gesamt",
     kpis: {
-      traffic:          12427,
-      conversion_rate:  0.81,
-      social_cr:        null,
-      revenue:          24953.45,
+      traffic:          11567,
+      conversion_rate:  1.24,
+      social_cr:        0,
+      revenue:          47778.68,
       rps:              null,
-      aov:              162.00,
-      cart_abandon:     30.6,
-      checkout_abandon: 54.1,
-      returning:        34.97
+      aov:              270.41,
+      cart_abandon:     46.0,
+      checkout_abandon: 43.0,
+      returning:        23.7
     }
   }
 ];
