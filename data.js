@@ -9,22 +9,15 @@ const KPI_DATA = [
     period: "2026-03-01",
     label: "Mär 26 · Gesamt",
     kpis: {
-      // ── Traffic & Conversion ──
       traffic:          11567,
       conversion_rate:  1.24,
       social_cr:        0,
-      // ── Umsatz ──
       aov:              270.41,
-      revenue:          null,   // Gesamtumsatz März in € → fehlt noch
-      rps:              null,   // Umsatz pro Session → wird auto berechnet wenn revenue da
-      // ── Funnel ──
+      revenue:          47778.68,
+      rps:              null,    // wird automatisch berechnet (revenue ÷ traffic)
       cart_abandon:     46.0,
       checkout_abandon: 43.0,
-      // ── Kunden ──
-      returning:        23.7,
-      // ── Marketing-Effizienz ──
-      roas:             null,   // Return on Ad Spend → fehlt noch
-      cac:              null    // Cost per Acquired Customer → fehlt noch
+      returning:        23.7
     }
   }
 ];
@@ -55,14 +48,6 @@ const KPI_META = {
     trend: "higher_better",
     description: "Conversion Rate via Social Media"
   },
-  aov: {
-    label: "Ø Bestellwert",
-    icon: "💶",
-    unit: "€",
-    format: "currency",
-    trend: "higher_better",
-    description: "Average Order Value (AOV)"
-  },
   revenue: {
     label: "Gesamtumsatz",
     icon: "💰",
@@ -71,13 +56,21 @@ const KPI_META = {
     trend: "higher_better",
     description: "Gesamtumsatz im Zeitraum"
   },
+  aov: {
+    label: "Ø Bestellwert",
+    icon: "💶",
+    unit: "€",
+    format: "currency",
+    trend: "higher_better",
+    description: "Average Order Value (AOV)"
+  },
   rps: {
     label: "Umsatz / Session",
     icon: "📈",
     unit: "€",
     format: "currency",
     trend: "higher_better",
-    description: "Revenue per Session (RPS)"
+    description: "Revenue per Session (RPS) – auto berechnet"
   },
   cart_abandon: {
     label: "Warenkorb-Abbruch",
@@ -102,21 +95,5 @@ const KPI_META = {
     format: "percent",
     trend: "higher_better",
     description: "Anteil wiederkehrender Kunden"
-  },
-  roas: {
-    label: "ROAS",
-    icon: "📣",
-    unit: "x",
-    format: "roas",
-    trend: "higher_better",
-    description: "Return on Ad Spend"
-  },
-  cac: {
-    label: "Kundenakquise-Kosten",
-    icon: "🎯",
-    unit: "€",
-    format: "currency",
-    trend: "lower_better",
-    description: "Cost per Acquired Customer (CAC)"
   }
 };
