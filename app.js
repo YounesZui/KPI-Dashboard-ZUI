@@ -1,7 +1,7 @@
 /* ─── app.js – Dashboard Logic ─── */
 
 /* ── State ── */
-let activeIndex = 0; // which period is currently shown
+let activeIndex = KPI_DATA.length - 1;
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,8 +29,9 @@ function loadFromLocalStorage() {
       }
     });
 
-    // Sort: newest first
-    KPI_DATA.sort((a, b) => b.period.localeCompare(a.period));
+    // Sort: oldest first
+    KPI_DATA.sort((a, b) => a.period.localeCompare(b.period));
+    activeIndex = KPI_DATA.length - 1;
   } catch(e) {
     console.warn('LocalStorage parse error:', e);
   }
@@ -79,7 +80,7 @@ function renderPeriodTabs() {
 /* ── KPI Cards ── */
 function renderKpiCards() {
   const current = { ...KPI_DATA[activeIndex], kpis: enrichKpis(KPI_DATA[activeIndex].kpis) };
-  const prev    = KPI_DATA[activeIndex + 1] ? { ...KPI_DATA[activeIndex + 1], kpis: enrichKpis(KPI_DATA[activeIndex + 1].kpis) } : null;
+  const prev    = KPI_DATA[activeIndex - 1] ? { ...KPI_DATA[activeIndex - 1], kpis: enrichKpis(KPI_DATA[activeIndex - 1].kpis) } : null;
   const container = document.getElementById('kpi-grid');
   container.innerHTML = '';
 
@@ -102,7 +103,7 @@ function renderKpiCards() {
     }
 
     const formattedVal = formatValue(val, meta);
-    const sparkData    = KPI_DATA.slice(activeIndex).map(d => d.kpis[key] ?? 0).reverse();
+    const sparkData    = KPI_DATA.slice(0, activeIndex + 1).map(d => d.kpis[key] ?? 0);
 
     const card = document.createElement('div');
     card.className = 'kpi-card';
@@ -194,7 +195,7 @@ function buildBarChart(data, meta, _latest) {
     const bH = ((d.val - min) / (max - min)) * innerH;
     const x  = padL + i * (innerW / data.length) + (innerW / data.length - barW) / 2;
     const y  = padT + innerH - bH;
-    const isActive = i === data.length - 1 - activeIndex;
+    const isActive = i === activeIndex;
     return `
       <rect x="${x}" y="${y}" width="${barW}" height="${bH}"
             fill="${isActive ? colorHi : color}" rx="3" opacity="${isActive ? 1 : 0.55}"/>
@@ -237,7 +238,7 @@ function renderTable() {
   </tr>`;
 
   tbody.innerHTML = KPI_DATA.map((entry, i) => {
-    const prev = KPI_DATA[i + 1] || null;
+    const prev = KPI_DATA[i - 1] || null;
     const cells = keys.map(key => {
       const val     = entry.kpis[key];
       const prevVal = prev?.kpis[key];
@@ -334,8 +335,8 @@ function submitEntry() {
     showToast('✅ Neuer Eintrag hinzugefügt!');
   }
 
-  KPI_DATA.sort((a, b) => b.period.localeCompare(a.period));
-  activeIndex = 0;
+  KPI_DATA.sort((a, b) => a.period.localeCompare(b.period));
+  activeIndex = KPI_DATA.length - 1;
   saveToLocalStorage();
   render();
   clearForm();
