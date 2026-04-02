@@ -448,3 +448,35 @@ td .delta.neg { color: var(--down); }
   .charts-grid { grid-template-columns: 1fr; }
   .entry-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Totals Row ── */
+tr.total-row {
+  background: var(--black);
+  border-top: 2px solid var(--orange);
+}
+
+tr.total-row:hover {
+  background: var(--black-soft);
+}
+
+td.total-label {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+td.total-cell {
+  color: #ffffff;
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+td.total-cell .unit,
+td.total-cell .unit-prefix {
+  color: #888888;
+}
