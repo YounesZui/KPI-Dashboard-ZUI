@@ -44,8 +44,14 @@
   </div>
 </div>
 
+<!-- Reihenfolge wichtig: erst Daten, dann Kanal-Config, dann Logik -->
 <script src="pos-data.js"></script>
-<script>const CHANNEL_DATA = POS_DATA; const CHANNEL_LABEL = "POS"; const CHANNEL_ICON = "🏪";</script>
+<script>
+  var CHANNEL_DATA  = POS_DATA;
+  var CHANNEL_LABEL = "POS";
+  var CHANNEL_ICON  = "🏪";
+</script>
 <script src="pos-app.js"></script>
+
 </body>
 </html>
