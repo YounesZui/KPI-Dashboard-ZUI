@@ -29,3 +29,8 @@ const OTTO_DATA = {
   ]
 
 };
+
+// Kanal-Konfiguration für pos-app.js
+const CHANNEL_DATA  = OTTO_DATA;
+const CHANNEL_LABEL = "Otto";
+const CHANNEL_ICON  = "📦";
