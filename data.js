@@ -248,7 +248,7 @@ const KPI_DATA = {
         checkout_abandon: 42.46,
         returning:        23.56
       }
-    }
+    },
          {
       period: "2026-05-01",
       label: "Mai 26",
