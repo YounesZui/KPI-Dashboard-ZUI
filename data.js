@@ -249,6 +249,21 @@ const KPI_DATA = {
         returning:        23.56
       }
     }
+         {
+      period: "2026-05-01",
+      label: "Mai 26",
+      kpis: {
+        traffic:          21055,
+        conversion_rate:  0.81,
+        social_cr:        0,
+        revenue:          62079,2,
+        rps:              null,
+        aov:              287.02,
+        cart_abandon:     44.1,
+        checkout_abandon: 44.08,
+        returning:        29,99
+      }
+    },
   ]
 
 };
